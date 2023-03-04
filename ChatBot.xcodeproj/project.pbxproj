@@ -11,6 +11,14 @@
 		3841FB3B29B0A7DE00AAC814 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3841FB3A29B0A7DE00AAC814 /* ContentView.swift */; };
 		3841FB3D29B0A7E200AAC814 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3841FB3C29B0A7E200AAC814 /* Assets.xcassets */; };
 		3841FB4029B0A7E200AAC814 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3841FB3F29B0A7E200AAC814 /* Preview Assets.xcassets */; };
+		3841FB4829B0A97700AAC814 /* ChatBot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3841FB4729B0A97700AAC814 /* ChatBot.swift */; };
+		3841FB4A29B0B7D800AAC814 /* DialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3841FB4929B0B7D800AAC814 /* DialogView.swift */; };
+		384356DC29B1B716005F2DBF /* PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356DB29B1B716005F2DBF /* PlaceholderView.swift */; };
+		384356DE29B1BDA2005F2DBF /* BordeBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356DD29B1BDA2005F2DBF /* BordeBackground.swift */; };
+		384356E229B1CA69005F2DBF /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356E129B1CA69005F2DBF /* Conversation.swift */; };
+		384356E629B2F266005F2DBF /* SideBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356E529B2F266005F2DBF /* SideBar.swift */; };
+		384356E829B2F353005F2DBF /* OpenAIServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356E729B2F353005F2DBF /* OpenAIServer.swift */; };
+		384356EA29B2F70C005F2DBF /* APIKeyConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356E929B2F70C005F2DBF /* APIKeyConfigurator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +28,14 @@
 		3841FB3C29B0A7E200AAC814 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3841FB3F29B0A7E200AAC814 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		3841FB4129B0A7E200AAC814 /* ChatBot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ChatBot.entitlements; sourceTree = "<group>"; };
+		3841FB4729B0A97700AAC814 /* ChatBot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBot.swift; sourceTree = "<group>"; };
+		3841FB4929B0B7D800AAC814 /* DialogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogView.swift; sourceTree = "<group>"; };
+		384356DB29B1B716005F2DBF /* PlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderView.swift; sourceTree = "<group>"; };
+		384356DD29B1BDA2005F2DBF /* BordeBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BordeBackground.swift; sourceTree = "<group>"; };
+		384356E129B1CA69005F2DBF /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		384356E529B2F266005F2DBF /* SideBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBar.swift; sourceTree = "<group>"; };
+		384356E729B2F353005F2DBF /* OpenAIServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIServer.swift; sourceTree = "<group>"; };
+		384356E929B2F70C005F2DBF /* APIKeyConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyConfigurator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +70,10 @@
 			children = (
 				3841FB3829B0A7DE00AAC814 /* ChatBotApp.swift */,
 				3841FB3A29B0A7DE00AAC814 /* ContentView.swift */,
+				384356E529B2F266005F2DBF /* SideBar.swift */,
+				384356EB29B3066C005F2DBF /* View */,
+				384356EC29B30676005F2DBF /* Style */,
+				384356ED29B30682005F2DBF /* Model */,
 				3841FB3C29B0A7E200AAC814 /* Assets.xcassets */,
 				3841FB4129B0A7E200AAC814 /* ChatBot.entitlements */,
 				3841FB3E29B0A7E200AAC814 /* Preview Content */,
@@ -67,6 +87,34 @@
 				3841FB3F29B0A7E200AAC814 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		384356EB29B3066C005F2DBF /* View */ = {
+			isa = PBXGroup;
+			children = (
+				384356E929B2F70C005F2DBF /* APIKeyConfigurator.swift */,
+				384356DB29B1B716005F2DBF /* PlaceholderView.swift */,
+				3841FB4929B0B7D800AAC814 /* DialogView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		384356EC29B30676005F2DBF /* Style */ = {
+			isa = PBXGroup;
+			children = (
+				384356DD29B1BDA2005F2DBF /* BordeBackground.swift */,
+			);
+			path = Style;
+			sourceTree = "<group>";
+		};
+		384356ED29B30682005F2DBF /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				3841FB4729B0A97700AAC814 /* ChatBot.swift */,
+				384356E729B2F353005F2DBF /* OpenAIServer.swift */,
+				384356E129B1CA69005F2DBF /* Conversation.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,6 +189,14 @@
 			files = (
 				3841FB3B29B0A7DE00AAC814 /* ContentView.swift in Sources */,
 				3841FB3929B0A7DE00AAC814 /* ChatBotApp.swift in Sources */,
+				384356E629B2F266005F2DBF /* SideBar.swift in Sources */,
+				3841FB4A29B0B7D800AAC814 /* DialogView.swift in Sources */,
+				384356E829B2F353005F2DBF /* OpenAIServer.swift in Sources */,
+				384356EA29B2F70C005F2DBF /* APIKeyConfigurator.swift in Sources */,
+				384356DC29B1B716005F2DBF /* PlaceholderView.swift in Sources */,
+				384356E229B1CA69005F2DBF /* Conversation.swift in Sources */,
+				384356DE29B1BDA2005F2DBF /* BordeBackground.swift in Sources */,
+				3841FB4829B0A97700AAC814 /* ChatBot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
