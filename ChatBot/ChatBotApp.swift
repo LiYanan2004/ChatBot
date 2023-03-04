@@ -12,7 +12,7 @@ struct ChatBotApp: App {
     @AppStorage("conversations") private var conversations = [Conversation]()
     @AppStorage("firstOpen") private var firstOpen = true
     @State private var showAPIKeyConfigurator = false
-    @ObservedObject private var chatBot = ChatBot()
+    @StateObject private var chatBot = ChatBot()
     @Environment(\.dismiss) private var dismiss
     
     var body: some Scene {
@@ -42,6 +42,13 @@ struct ChatBotApp: App {
                 } else if !conv.dialogs.isEmpty {
                     conversations.append(conv)
                 }
+            }
+            .onReceive(chatBot.conversationUpdate) { conv in
+                guard let index = conversations.firstIndex(where: { conv.id == $0.id }) else { return }
+                conversations[index] = conv
+            }
+            .onReceive(chatBot.newConversation) { conv in
+                conversations.append(conv)
             }
             .onAppear {
                 if firstOpen {

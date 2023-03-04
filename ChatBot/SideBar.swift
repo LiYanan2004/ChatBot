@@ -15,31 +15,31 @@ struct SideBar: View {
     
     var body: some View {
         conversationList
-        .navigationTitle("Conversations")
-        .safeAreaInset(edge: .bottom) {
-            VStack {
-                newChatButton
-                clearConversationsButton
+            .navigationTitle("Conversations")
+            .safeAreaInset(edge: .bottom) {
+                VStack {
+                    newChatButton
+                    clearConversationsButton
+                }
+                .buttonStyle(.plain)
+                .scenePadding()
             }
-            .buttonStyle(.plain)
-            .scenePadding()
-        }
-        .listStyle(.sidebar)
-        .conditionally {
-            if #available(macOS 13, *) {
-                $0.navigationSplitViewColumnWidth(min: 230, ideal: 400)
+            .listStyle(.sidebar)
+            .conditionally {
+                if #available(macOS 13, *) {
+                    $0.navigationSplitViewColumnWidth(min: 230, ideal: 400)
+                }
             }
-        }
-        .toolbar {
-            Button {
-                showAPIKeyPopover = true
-            } label: {
-                Label("API Key", systemImage: "key.fill")
+            .toolbar {
+                Button {
+                    showAPIKeyPopover = true
+                } label: {
+                    Label("API Key", systemImage: "key.fill")
+                }
+                .popover(isPresented: $showAPIKeyPopover) {
+                    APIKeyConfigurator().padding()
+                }
             }
-            .popover(isPresented: $showAPIKeyPopover) {
-                APIKeyConfigurator().padding()
-            }
-        }
     }
     
     @ViewBuilder
@@ -67,7 +67,7 @@ struct SideBar: View {
         Button("Delete Conversation") {
             if let index = conversations.firstIndex(of: conversation) {
                 conversations.remove(at: index)
-                chatBot.switchTo(Conversation())
+                chatBot.switchTo(nil)
             }
         }
     }
@@ -96,6 +96,7 @@ struct SideBar: View {
             .confirmationDialog("Clear Conversations", isPresented: $showConfirmDialog) {
                 Button("Clear", role: .destructive) {
                     conversations = []
+                    chatBot.switchTo(nil)
                 }
             } message: {
                 Text("This action can't redo")

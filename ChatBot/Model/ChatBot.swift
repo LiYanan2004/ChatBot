@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 class ChatBot: ObservableObject {
     @Published var conversation: Conversation?
@@ -15,17 +16,22 @@ class ChatBot: ObservableObject {
         get { conversation?.dialogs ?? [] }
         set {
             if conversation == nil {
-                conversation = Conversation()
+                let conv = Conversation()
+                newConversation.send(conv)
+                conversation = conv
             }
             conversation?.dialogs = newValue
         }
     }
     
+    let newConversation = PassthroughSubject<Conversation, Never>()
+    let conversationUpdate = PassthroughSubject<Conversation, Never>()
+    
     init() {
         self.openAISever = OpenAIServer(chatBot: self)
     }
     
-    func switchTo(_ conversation: Conversation) {
+    func switchTo(_ conversation: Conversation?) {
         self.conversation = conversation
         generating = false
     }
@@ -37,10 +43,13 @@ class ChatBot: ObservableObject {
         }
         self.generating = true
         
+        let currentConv = conversation
+        
         // Get summarized title
         Task.detached {
             if self.conversation?.title == "New Chat" {
-                try await self.generateTitle(from: text)
+                let title = try await self.openAISever.getTitle(message: text)
+                await self.setTitle(title, conversation: currentConv)
             }
         }
         
@@ -58,9 +67,9 @@ class ChatBot: ObservableObject {
                 while content.hasPrefix("\n") {
                     content = String(content[content.index(after: content.startIndex)...])
                 }
-                await self.setBotMessage(content)
+                await self.setBotMessage(content, conversation: currentConv)
             } catch {
-                await self.dialogFailed(error.localizedDescription)
+                await self.dialogFailed(error.localizedDescription, conversation: currentConv)
             }
         }
     }
@@ -71,23 +80,32 @@ class ChatBot: ObservableObject {
         answer(dialogs[dialogs.count - 1].userMessage, retry: true)
     }
     
-    private func generateTitle(from message: String) async throws {
-        let title = try await openAISever.getTitle(message: message)
-        await setTitle(title)
+    @MainActor private func setTitle(_ title: String, conversation: Conversation?) {
+        guard let conversation else { return }
+        guard conversation.id == self.conversation?.id else { return }
+        self.conversation?.title = title
     }
     
-    @MainActor private func setTitle(_ title: String) {
-        conversation?.title = title
-    }
-    
-    @MainActor private func setBotMessage(_ message: String) {
+    @MainActor private func setBotMessage(_ message: String, conversation: Conversation?) {
+        defer { generating = false }
+        guard var conversation else { return }
+        guard conversation.id == self.conversation?.id else {
+            conversation.dialogs[conversation.dialogs.count - 1].botMessage = message
+            conversationUpdate.send(conversation)
+            return
+        }
         dialogs[dialogs.count - 1].botMessage = message
-        generating = false
     }
     
-    @MainActor private func dialogFailed(_ error: String) {
+    @MainActor private func dialogFailed(_ error: String, conversation: Conversation?) {
+        defer { generating = false }
+        guard var conversation else { return }
+        guard conversation.id == self.conversation?.id else {
+            conversation.dialogs[conversation.dialogs.count - 1].errorMsg = error
+            conversationUpdate.send(conversation)
+            return
+        }
         dialogs[dialogs.count - 1].errorMsg = error
-        generating = false
     }
 }
 
