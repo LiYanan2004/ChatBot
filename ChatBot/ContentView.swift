@@ -12,7 +12,7 @@ struct ContentView: View {
     @State private var text = ""
     
     var body: some View {
-        VStack {
+        ScrollViewReader { proxy in
             ScrollView {
                 Group {
                     if chatBot.dialogs.isEmpty {
@@ -21,8 +21,12 @@ struct ContentView: View {
                             .environmentObject(chatBot)
                     } else {
                         VStack {
-                            ForEach(chatBot.conversation?.dialogs ?? []) { dialog in
+                            ForEach(chatBot.dialogs) { dialog in
                                 DialogView(dialog: dialog)
+                                    .id(dialog.id)
+                                    .task(id: dialog.botMessage) {
+                                        withAnimation { proxy.scrollTo(dialog.id, anchor: .bottom) }
+                                    }
                             }
                         }
                     }
