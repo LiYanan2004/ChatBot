@@ -21,7 +21,7 @@ struct ContentView: View {
                             .environmentObject(chatBot)
                     } else {
                         VStack {
-                            ForEach(chatBot.conversation.dialogs) { dialog in
+                            ForEach(chatBot.conversation?.dialogs ?? []) { dialog in
                                 DialogView(dialog: dialog)
                             }
                         }
@@ -32,7 +32,7 @@ struct ContentView: View {
             .textSelection(.enabled)
             .safeAreaInset(edge: .bottom) {
                 HStack {
-                    TextField("Type to ask ChatGPT", text: $text, axis: .vertical)
+                    TextField("Type to ask ChatGPT", text: $text)
                         .textFieldStyle(.plain)
                         .bordedBackground()
                         .onSubmit {
@@ -56,7 +56,6 @@ struct ContentView: View {
                 .background(.bar)
                 .disabled(chatBot.generating)
             }
-            .scrollContentBackground(.hidden)
         }
     }
 }

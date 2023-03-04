@@ -19,6 +19,7 @@
 		384356E629B2F266005F2DBF /* SideBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356E529B2F266005F2DBF /* SideBar.swift */; };
 		384356E829B2F353005F2DBF /* OpenAIServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356E729B2F353005F2DBF /* OpenAIServer.swift */; };
 		384356EA29B2F70C005F2DBF /* APIKeyConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356E929B2F70C005F2DBF /* APIKeyConfigurator.swift */; };
+		384356EF29B3940F005F2DBF /* ConditionalModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356EE29B3940F005F2DBF /* ConditionalModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		384356E529B2F266005F2DBF /* SideBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBar.swift; sourceTree = "<group>"; };
 		384356E729B2F353005F2DBF /* OpenAIServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIServer.swift; sourceTree = "<group>"; };
 		384356E929B2F70C005F2DBF /* APIKeyConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKeyConfigurator.swift; sourceTree = "<group>"; };
+		384356EE29B3940F005F2DBF /* ConditionalModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionalModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 				3841FB3829B0A7DE00AAC814 /* ChatBotApp.swift */,
 				3841FB3A29B0A7DE00AAC814 /* ContentView.swift */,
 				384356E529B2F266005F2DBF /* SideBar.swift */,
+				384356EE29B3940F005F2DBF /* ConditionalModifier.swift */,
 				384356EB29B3066C005F2DBF /* View */,
 				384356EC29B30676005F2DBF /* Style */,
 				384356ED29B30682005F2DBF /* Model */,
@@ -188,6 +191,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3841FB3B29B0A7DE00AAC814 /* ContentView.swift in Sources */,
+				384356EF29B3940F005F2DBF /* ConditionalModifier.swift in Sources */,
 				3841FB3929B0A7DE00AAC814 /* ChatBotApp.swift in Sources */,
 				384356E629B2F266005F2DBF /* SideBar.swift in Sources */,
 				3841FB4A29B0B7D800AAC814 /* DialogView.swift in Sources */,
@@ -253,7 +257,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.2;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -307,7 +311,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.2;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;

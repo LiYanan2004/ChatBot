@@ -48,8 +48,11 @@ actor OpenAIServer {
         let responsedJSON = try! JSONSerialization.jsonObject(with: response.data(using: .utf8)!) as! [String : Any]
         if let choice = (responsedJSON["choices"] as? [[String : Any]])?.first,
            let message = choice["message"] as? [String : String],
-           let content = message["content"] {
-            return String(content.trimmingPrefix(while: { $0.isWhitespace }))
+           var content = message["content"] {
+            while content.hasPrefix("\n") {
+                content = String(content[content.index(after: content.startIndex)...])
+            }
+            return content
         }
         
         throw URLError(.cannotParseResponse)

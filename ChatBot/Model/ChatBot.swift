@@ -8,12 +8,17 @@
 import SwiftUI
 
 class ChatBot: ObservableObject {
-    @Published var conversation = Conversation()
+    @Published var conversation: Conversation?
     @Published var generating = false
     var openAISever: OpenAIServer!
     var dialogs: [Dialog] {
-        get { conversation.dialogs }
-        set { conversation.dialogs = newValue }
+        get { conversation?.dialogs ?? [] }
+        set {
+            if conversation == nil {
+                conversation = Conversation()
+            }
+            conversation?.dialogs = newValue
+        }
     }
     
     init() {
@@ -34,7 +39,7 @@ class ChatBot: ObservableObject {
         
         // Get summarized title
         Task.detached {
-            if self.conversation.title == "New Chat" {
+            if self.conversation?.title == "New Chat" {
                 try await self.generateTitle(from: text)
             }
         }
@@ -49,8 +54,11 @@ class ChatBot: ObservableObject {
                 let responsedJSON = try! JSONSerialization.jsonObject(with: resp.data(using: .utf8)!) as! [String : Any]
                 guard let choice = (responsedJSON["choices"] as? [[String : Any]])?.first else { return }
                 guard let message = choice["message"] as? [String : String] else { return }
-                guard let content = message["content"] else { return }
-                await self.setBotMessage(String(content.trimmingPrefix(while: { $0.isWhitespace })))
+                guard var content = message["content"] else { return }
+                while content.hasPrefix("\n") {
+                    content = String(content[content.index(after: content.startIndex)...])
+                }
+                await self.setBotMessage(content)
             } catch {
                 await self.dialogFailed(error.localizedDescription)
             }
@@ -69,7 +77,7 @@ class ChatBot: ObservableObject {
     }
     
     @MainActor private func setTitle(_ title: String) {
-        conversation.title = title
+        conversation?.title = title
     }
     
     @MainActor private func setBotMessage(_ message: String) {

@@ -17,15 +17,26 @@ struct ChatBotApp: App {
     
     var body: some Scene {
         WindowGroup {
-            NavigationSplitView {
-                SideBar()
-            } detail: {
-                ContentView()
-                    .navigationTitle(chatBot.conversation.title)
+            Group {
+                if #available(macOS 13.0, *) {
+                    NavigationSplitView {
+                        SideBar()
+                    } detail: {
+                        ContentView()
+                            .navigationTitle(chatBot.conversation?.title ?? "New Chat")
+                    }
+                } else {
+                    NavigationView {
+                        SideBar()
+                        ContentView()
+                            .navigationTitle(chatBot.conversation?.title ?? "New Chat")
+                    }
+                }
             }
             .background()
             .environmentObject(chatBot)
             .onChange(of: chatBot.conversation) { conv in
+                guard let conv else { return }
                 if let index = conversations.firstIndex(where: { $0.id == conv.id }) {
                     conversations[index] = conv
                 } else if !conv.dialogs.isEmpty {
@@ -48,7 +59,7 @@ struct ChatBotApp: App {
                 .padding(.horizontal)
                 .padding(.vertical, 8)
             }
+            .frame(idealWidth: 1000, idealHeight: 800)
         }
-        .defaultSize(width: 1000, height: 800)
     }
 }

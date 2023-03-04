@@ -14,10 +14,7 @@ struct SideBar: View {
     @State private var showAPIKeyPopover = false
     
     var body: some View {
-        List(conversations, selection: $chatBot.conversation) { conversation in
-            NavigationLink(conversation.title, value: conversation)
-                .contextMenu { deleteButton(conversation) }
-        }
+        conversationList
         .navigationTitle("Conversations")
         .safeAreaInset(edge: .bottom) {
             VStack {
@@ -28,7 +25,11 @@ struct SideBar: View {
             .scenePadding()
         }
         .listStyle(.sidebar)
-        .navigationSplitViewColumnWidth(min: 230, ideal: 400)
+        .conditionally {
+            if #available(macOS 13, *) {
+                $0.navigationSplitViewColumnWidth(min: 230, ideal: 400)
+            }
+        }
         .toolbar {
             Button {
                 showAPIKeyPopover = true
@@ -37,6 +38,27 @@ struct SideBar: View {
             }
             .popover(isPresented: $showAPIKeyPopover) {
                 APIKeyConfigurator().padding()
+            }
+        }
+    }
+    
+    @ViewBuilder
+    var conversationList: some View {
+        if #available(macOS 13.0, *) {
+            List(conversations, selection: $chatBot.conversation) { conversation in
+                NavigationLink(conversation.title, value: conversation)
+                    .contextMenu { deleteButton(conversation) }
+            }
+        } else {
+            List(conversations) { conversation in
+                NavigationLink(
+                    conversation.title,
+                    tag: conversation,
+                    selection: $chatBot.conversation
+                ) {
+                    ContentView().navigationTitle(chatBot.conversation?.title ?? "New Chat")
+                }
+                .contextMenu { deleteButton(conversation) }
             }
         }
     }
@@ -84,10 +106,12 @@ struct SideBar: View {
 
 struct SideBar_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
-            SideBar()
-                .frame(width: 230)
-                .environmentObject(ChatBot())
+        if #available(macOS 13.0, *) {
+            NavigationStack {
+                SideBar()
+                    .frame(width: 230)
+                    .environmentObject(ChatBot())
+            }
         }
     }
 }
