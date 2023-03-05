@@ -9,7 +9,6 @@ import SwiftUI
 
 @main
 struct ChatBotApp: App {
-    @AppStorage("conversations") private var conversations = [Conversation]()
     @AppStorage("firstOpen") private var firstOpen = true
     @State private var showAPIKeyConfigurator = false
     @StateObject private var chatBot = ChatBot()
@@ -35,21 +34,6 @@ struct ChatBotApp: App {
             }
             .background()
             .environmentObject(chatBot)
-            .onChange(of: chatBot.conversation) { conv in
-                guard let conv else { return }
-                if let index = conversations.firstIndex(where: { $0.id == conv.id }) {
-                    conversations[index] = conv
-                } else if !conv.dialogs.isEmpty {
-                    conversations.append(conv)
-                }
-            }
-            .onReceive(chatBot.conversationUpdate) { conv in
-                guard let index = conversations.firstIndex(where: { conv.id == $0.id }) else { return }
-                conversations[index] = conv
-            }
-            .onReceive(chatBot.newConversation) { conv in
-                conversations.append(conv)
-            }
             .onAppear {
                 if firstOpen {
                     showAPIKeyConfigurator = true
@@ -66,7 +50,17 @@ struct ChatBotApp: App {
                 .padding(.horizontal)
                 .padding(.vertical, 8)
             }
-            .frame(idealWidth: 1000, idealHeight: 800)
         }
+        .conditionally {
+            if #available(macOS 13.0, *) {
+                $0.defaultSize(width: 1000, height: 800)
+            }
+        }
+    }
+}
+
+extension Scene {
+    func conditionally<S: Scene>(@SceneBuilder _ apply: (Self) -> S) -> S {
+        apply(self)
     }
 }

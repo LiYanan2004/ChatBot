@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SideBar: View {
-    @AppStorage("conversations") private var conversations = [Conversation]()
     @EnvironmentObject private var chatBot: ChatBot
     @State private var showConfirmDialog = false
     @State private var showAPIKeyPopover = false
@@ -44,17 +43,24 @@ struct SideBar: View {
     
     @ViewBuilder
     var conversationList: some View {
+        let currentConversationID = Binding<UUID?> {
+            chatBot.conversation?.id
+        } set: { id in
+            if let index = chatBot.conversations.firstIndex(where: { $0.id == id }) {
+                chatBot.switchTo(chatBot.conversations[index])
+            }
+        }
         if #available(macOS 13.0, *) {
-            List(conversations, selection: $chatBot.conversation) { conversation in
-                NavigationLink(conversation.title, value: conversation)
+            List(chatBot.conversations, selection: currentConversationID) { conversation in
+                NavigationLink(conversation.title, value: conversation.id)
                     .contextMenu { deleteButton(conversation) }
             }
         } else {
-            List(conversations) { conversation in
+            List(chatBot.conversations) { conversation in
                 NavigationLink(
                     conversation.title,
-                    tag: conversation,
-                    selection: $chatBot.conversation
+                    tag: conversation.id,
+                    selection: currentConversationID
                 ) {
                     ContentView().navigationTitle(chatBot.conversation?.title ?? "New Chat")
                 }
@@ -65,8 +71,8 @@ struct SideBar: View {
     
     func deleteButton(_ conversation: Conversation) -> some View {
         Button("Delete Conversation") {
-            if let index = conversations.firstIndex(of: conversation) {
-                conversations.remove(at: index)
+            if let index = chatBot.conversations.firstIndex(of: conversation) {
+                chatBot.conversations.remove(at: index)
                 chatBot.switchTo(nil)
             }
         }
@@ -75,7 +81,6 @@ struct SideBar: View {
     var newChatButton: some View {
         Button {
             let conv = Conversation()
-            conversations.append(conv)
             chatBot.switchTo(conv)
         } label: {
             Label("New Chat", systemImage: "plus")
@@ -85,7 +90,7 @@ struct SideBar: View {
     
     @ViewBuilder
     var clearConversationsButton: some View {
-        if !conversations.isEmpty {
+        if !chatBot.conversations.isEmpty {
             Button {
                 showConfirmDialog = true
             } label: {
@@ -95,7 +100,7 @@ struct SideBar: View {
             .bordedBackground()
             .confirmationDialog("Clear Conversations", isPresented: $showConfirmDialog) {
                 Button("Clear", role: .destructive) {
-                    conversations = []
+                    chatBot.conversations = []
                     chatBot.switchTo(nil)
                 }
             } message: {

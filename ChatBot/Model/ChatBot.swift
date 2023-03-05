@@ -9,31 +9,37 @@ import SwiftUI
 import Combine
 
 class ChatBot: ObservableObject {
-    @Published var conversation: Conversation?
+    @AppStorage("conversations") var conversations = [Conversation]()
+    @Published var conversation: Conversation? {
+        willSet {
+            guard let newValue else { return }
+            if let index = conversations.firstIndex(where: { $0.id == newValue.id }) {
+                conversations[index] = newValue
+            }
+        }
+    }
     @Published var generating = false
     var openAISever: OpenAIServer!
     var dialogs: [Dialog] {
         get { conversation?.dialogs ?? [] }
         set {
             if conversation == nil {
-                let conv = Conversation()
-                newConversation.send(conv)
-                conversation = conv
+                switchTo(Conversation())
             }
             conversation?.dialogs = newValue
         }
     }
-    
-    let newConversation = PassthroughSubject<Conversation, Never>()
-    let conversationUpdate = PassthroughSubject<Conversation, Never>()
     
     init() {
         self.openAISever = OpenAIServer(chatBot: self)
     }
     
     func switchTo(_ conversation: Conversation?) {
+        if let conversation,
+           !conversations.contains(where: { $0.id == conversation.id }) {
+            conversations.append(conversation)
+        }
         self.conversation = conversation
-        generating = false
     }
     
     func answer(_ text: String, retry: Bool = false) {
@@ -82,16 +88,22 @@ class ChatBot: ObservableObject {
     
     @MainActor private func setTitle(_ title: String, conversation: Conversation?) {
         guard let conversation else { return }
-        guard conversation.id == self.conversation?.id else { return }
+        guard conversation.id == self.conversation?.id else {
+            if let index = conversations.firstIndex(where: { $0.id == conversation.id }) {
+                conversations[index].title = title
+            }
+            return
+        }
         self.conversation?.title = title
     }
     
     @MainActor private func setBotMessage(_ message: String, conversation: Conversation?) {
         defer { generating = false }
-        guard var conversation else { return }
+        guard let conversation else { return }
         guard conversation.id == self.conversation?.id else {
-            conversation.dialogs[conversation.dialogs.count - 1].botMessage = message
-            conversationUpdate.send(conversation)
+            if let index = conversations.firstIndex(where: { $0.id == conversation.id }) {
+                conversations[index].dialogs[conversation.dialogs.count - 1].botMessage = message
+            }
             return
         }
         dialogs[dialogs.count - 1].botMessage = message
@@ -99,10 +111,11 @@ class ChatBot: ObservableObject {
     
     @MainActor private func dialogFailed(_ error: String, conversation: Conversation?) {
         defer { generating = false }
-        guard var conversation else { return }
+        guard let conversation else { return }
         guard conversation.id == self.conversation?.id else {
-            conversation.dialogs[conversation.dialogs.count - 1].errorMsg = error
-            conversationUpdate.send(conversation)
+            if let index = conversations.firstIndex(where: { $0.id == conversation.id }) {
+                conversations[index].dialogs[conversation.dialogs.count - 1].errorMsg = error
+            }
             return
         }
         dialogs[dialogs.count - 1].errorMsg = error
