@@ -9,6 +9,7 @@ import SwiftUI
 
 @main
 struct ChatBotApp: App {
+    @AppStorage("api_key") private var APIKEY = ""
     @AppStorage("firstOpen") private var firstOpen = true
     @State private var showAPIKeyConfigurator = false
     @StateObject private var chatBot = ChatBot()
@@ -43,7 +44,7 @@ struct ChatBotApp: App {
             .sheet(isPresented: $showAPIKeyConfigurator) {
                 VStack(alignment: .trailing) {
                     APIKeyConfigurator()
-                    Button("OK", action: { showAPIKeyConfigurator = false })
+                    Button(APIKEY.isEmpty ? "Set it later" : "OK", action: { showAPIKeyConfigurator = false })
                 }
                 .frame(minWidth: 300)
                 .fixedSize(horizontal: false, vertical: true)
