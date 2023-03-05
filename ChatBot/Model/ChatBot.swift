@@ -40,6 +40,8 @@ class ChatBot: ObservableObject {
             conversations.append(conversation)
         }
         self.conversation = conversation
+        let lastDialog = conversation?.dialogs.last
+        generating = lastDialog?.botMessage.isEmpty ?? false && lastDialog?.errorMsg == nil
     }
     
     func answer(_ text: String, retry: Bool = false) {
