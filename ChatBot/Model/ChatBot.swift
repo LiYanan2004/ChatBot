@@ -69,7 +69,10 @@ class ChatBot: ObservableObject {
             do {
                 let resp = try await self.openAISever.getAnswer(messagesBody: httpBodyData)
                 let responsedJSON = try! JSONSerialization.jsonObject(with: resp.data(using: .utf8)!) as! [String : Any]
-                guard let choice = (responsedJSON["choices"] as? [[String : Any]])?.first else { return }
+                guard let choice = (responsedJSON["choices"] as? [[String : Any]])?.first else {
+                    guard let errorMessage = (responsedJSON["error"] as? [String : Any])?["message"] as? String else { return }
+                    throw RequestError(errorMessage)
+                }
                 guard let message = choice["message"] as? [String : String] else { return }
                 guard var content = message["content"] else { return }
                 while content.hasPrefix("\n") {
@@ -121,6 +124,17 @@ class ChatBot: ObservableObject {
             return
         }
         dialogs[dialogs.count - 1].errorMsg = error
+    }
+    
+    struct RequestError: Error, LocalizedError {
+        private var error: String
+        init(_ error: String) {
+            self.error = error
+        }
+        
+        var errorDescription: String? {
+            error
+        }
     }
 }
 
