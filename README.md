@@ -22,9 +22,11 @@ Copy your API_KEY
 
 ### Enter your API_KEY
 
-When you first open ChatBot, it will ask for your API_KEY, but you can set it later.
+When you first open ChatBot, it will ask for your API_KEY.
 
 ![](/imgs/api-key-startup.png)
+
+Also, you can set it later through the button on the side bar.
 
 ![](/imgs/api-key-toolbar.png)
 
