@@ -103,7 +103,11 @@ class ChatBot: ObservableObject {
     }
     
     @MainActor private func setBotMessage(_ message: String, conversation: Conversation?) {
-        defer { generating = false }
+        defer {
+            if conversation?.id == self.conversation?.id {
+                generating = false
+            }
+        }
         guard let conversation else { return }
         guard conversation.id == self.conversation?.id else {
             if let index = conversations.firstIndex(where: { $0.id == conversation.id }) {
@@ -115,7 +119,11 @@ class ChatBot: ObservableObject {
     }
     
     @MainActor private func dialogFailed(_ error: String, conversation: Conversation?) {
-        defer { generating = false }
+        defer {
+            if conversation?.id == self.conversation?.id {
+                generating = false
+            }
+        }
         guard let conversation else { return }
         guard conversation.id == self.conversation?.id else {
             if let index = conversations.firstIndex(where: { $0.id == conversation.id }) {
