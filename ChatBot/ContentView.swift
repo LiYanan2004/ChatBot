@@ -17,7 +17,9 @@ struct ContentView: View {
                 Group {
                     if chatBot.dialogs.isEmpty {
                         PlaceholderView()
+                            #if os(macOS)
                             .focusable(false)
+                            #endif
                             .environmentObject(chatBot)
                     } else {
                         VStack {
@@ -57,7 +59,7 @@ struct ContentView: View {
                 .animation(.spring(), value: chatBot.dialogs.isEmpty)
                 .animation(.spring(), value: chatBot.generating)
                 .padding()
-                .background(.bar)
+                .background(.background)
                 .disabled(chatBot.generating)
             }
         }

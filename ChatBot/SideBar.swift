@@ -8,39 +8,76 @@
 import SwiftUI
 
 struct SideBar: View {
+    @AppStorage("api_key") private var APIKEY = ""
+    @AppStorage("firstOpen") private var firstOpen = true
     @EnvironmentObject private var chatBot: ChatBot
     @State private var showConfirmDialog = false
     @State private var showAPIKeyPopover = false
+    #if !os(macOS)
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    #endif
+    
+    private var isCompact: Bool {
+        #if !os(macOS)
+        horizontalSizeClass == .compact
+        #else
+        return false
+        #endif
+    }
     
     var body: some View {
         conversationList
             .navigationTitle("Conversations")
             .safeAreaInset(edge: .bottom) {
-                VStack {
-                    newChatButton
-                    clearConversationsButton
+                if !isCompact {
+                    VStack {
+                        newChatButton
+                        clearConversationsButton
+                    }
+                    .buttonStyle(.plain)
+                    .scenePadding()
                 }
-                .buttonStyle(.plain)
-                .scenePadding()
             }
             .listStyle(.sidebar)
             .conditionally {
-                if #available(macOS 13.0, *) {
+                if #available(macOS 13.0, iOS 16.0, *) {
                     $0.navigationSplitViewColumnWidth(min: 230, ideal: 400)
                 } else {
                     $0
                 }
             }
-            .toolbar {
-                Button {
+            .toolbar(content: toolbarContent)
+    }
+    
+    @ToolbarContentBuilder
+    func toolbarContent() -> some ToolbarContent {
+        ToolbarItem {
+            Button {
+                showAPIKeyPopover = true
+            } label: {
+                Label("API Key", systemImage: "key.fill")
+            }
+            .popover(isPresented: $showAPIKeyPopover, arrowEdge: .bottom) {
+                APIKeyConfigurator()
+                    .frame(idealWidth: 380, idealHeight: 200)
+            }
+            .onAppear {
+                if firstOpen {
                     showAPIKeyPopover = true
-                } label: {
-                    Label("API Key", systemImage: "key.fill")
-                }
-                .popover(isPresented: $showAPIKeyPopover) {
-                    APIKeyConfigurator().padding()
+                    firstOpen = false
                 }
             }
+        }
+        
+        #if !os(macOS)
+        ToolbarItemGroup(placement: .bottomBar) {
+            if isCompact {
+                clearConversationsButton
+                Spacer()
+                newChatButton
+            }
+        }
+        #endif
     }
     
     @ViewBuilder
@@ -52,10 +89,10 @@ struct SideBar: View {
                 chatBot.switchTo(chatBot.conversations[index])
             }
         }
-        if #available(macOS 13.0, *) {
+        if #available(macOS 13.0, iOS 16.0, *) {
             List(chatBot.conversations, selection: currentConversationID) { conversation in
                 NavigationLink(conversation.title, value: conversation.id)
-                    .contextMenu { deleteButton(conversation) }
+                    .swipeActions { deleteButton(conversation) }
             }
         } else {
             List(chatBot.conversations) { conversation in
@@ -64,19 +101,25 @@ struct SideBar: View {
                     tag: conversation.id,
                     selection: currentConversationID
                 ) {
-                    ContentView().navigationTitle(chatBot.conversation?.title ?? "New Chat")
+                    ContentView()
+                        .navigationTitle(chatBot.conversation?.title ?? "New Chat")
+                        #if !os(macOS)
+                        .navigationBarTitleDisplayMode(.inline)
+                        #endif
                 }
-                .contextMenu { deleteButton(conversation) }
+                .swipeActions { deleteButton(conversation) }
             }
         }
     }
     
     func deleteButton(_ conversation: Conversation) -> some View {
-        Button("Delete Conversation") {
+        Button(role: .destructive) {
             if let index = chatBot.conversations.firstIndex(of: conversation) {
                 chatBot.conversations.remove(at: index)
                 chatBot.switchTo(nil)
             }
+        } label: {
+            Label("Delete Conversation", systemImage: "trash")
         }
     }
     
@@ -87,7 +130,9 @@ struct SideBar: View {
         } label: {
             Label("New Chat", systemImage: "plus")
         }
+        #if os(macOS)
         .bordedBackground()
+        #endif
     }
     
     @ViewBuilder
@@ -99,7 +144,9 @@ struct SideBar: View {
                 Label("Clear Conversations", systemImage: "trash")
             }
             .foregroundColor(.red)
+            #if os(macOS)
             .bordedBackground()
+            #endif
             .confirmationDialog("Clear Conversations", isPresented: $showConfirmDialog) {
                 Button("Clear", role: .destructive) {
                     chatBot.conversations = []
@@ -114,7 +161,7 @@ struct SideBar: View {
 
 struct SideBar_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(macOS 13.0, *) {
+        if #available(macOS 13.0, iOS 16.0, *) {
             NavigationStack {
                 SideBar()
                     .frame(width: 230)
