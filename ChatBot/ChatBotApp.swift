@@ -52,16 +52,11 @@ struct ChatBotApp: App {
                 .padding(.vertical, 8)
             }
         }
-        .conditionally {
-            if #available(macOS 13.0, *) {
-                $0.defaultSize(width: 1000, height: 800)
-            }
-        }
     }
 }
 
 extension Scene {
-    func conditionally<S: Scene>(@SceneBuilder _ apply: (Self) -> S) -> S {
+    func conditionally<S: Scene>(_ apply: (Self) -> S) -> S {
         apply(self)
     }
 }

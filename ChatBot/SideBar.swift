@@ -25,8 +25,10 @@ struct SideBar: View {
             }
             .listStyle(.sidebar)
             .conditionally {
-                if #available(macOS 13, *) {
+                if #available(macOS 13.0, *) {
                     $0.navigationSplitViewColumnWidth(min: 230, ideal: 400)
+                } else {
+                    $0
                 }
             }
             .toolbar {
