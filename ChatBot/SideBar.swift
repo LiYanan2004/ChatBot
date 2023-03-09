@@ -92,7 +92,11 @@ struct SideBar: View {
         if #available(macOS 13.0, iOS 16.0, *) {
             List(chatBot.conversations, selection: currentConversationID) { conversation in
                 NavigationLink(conversation.title, value: conversation.id)
+                    #if os(macOS)
+                    .contextMenu { deleteButton(conversation) }
+                    #else
                     .swipeActions { deleteButton(conversation) }
+                    #endif
             }
         } else {
             List(chatBot.conversations) { conversation in
@@ -107,7 +111,11 @@ struct SideBar: View {
                         .navigationBarTitleDisplayMode(.inline)
                         #endif
                 }
+                #if os(macOS)
+                .contextMenu { deleteButton(conversation) }
+                #else
                 .swipeActions { deleteButton(conversation) }
+                #endif
             }
         }
     }
