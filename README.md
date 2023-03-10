@@ -31,3 +31,9 @@ Also, you can set it later through the button on the side bar.
 ![](/imgs/api-key-toolbar.png)
 
 ### Start a chat 🥳
+
+## Tip for China users
+
+Users in China may not be able to request from OpenAI’s API domain, namely api.openai.com.
+
+If you want to use ChatBot, you need to connect VPN.
