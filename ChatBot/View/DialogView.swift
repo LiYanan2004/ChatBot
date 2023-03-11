@@ -5,6 +5,7 @@
 //  Created by LiYanan2004 on 2023/3/2.
 //
 
+import MarkdownUI
 import SwiftUI
 
 struct DialogView: View {
@@ -13,7 +14,7 @@ struct DialogView: View {
     
     var body: some View {
         VStack(spacing: 10) {
-            Text(verbatim: dialog.userMessage)
+            Markdown(dialog.userMessage)
                 .unlimitedText()
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -38,7 +39,7 @@ struct DialogView: View {
                                 }
                             }
                     } else {
-                        Text(verbatim: dialog.botMessage)
+                        Markdown(dialog.botMessage)
                             .unlimitedText()
                     }
                 }
