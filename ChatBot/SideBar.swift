@@ -11,8 +11,12 @@ struct SideBar: View {
     @AppStorage("api_key") private var APIKEY = ""
     @AppStorage("firstOpen") private var firstOpen = true
     @EnvironmentObject private var chatBot: ChatBot
+    @State private var conversationIDToRename: UUID?
+    @FocusState private var isRenameTextFieldFocused: Bool
+    @State private var renamedTitle = ""
     @State private var showConfirmDialog = false
     @State private var showAPIKeyPopover = false
+    
     #if !os(macOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     #endif
@@ -91,12 +95,38 @@ struct SideBar: View {
         }
         if #available(macOS 13.0, iOS 16.0, *) {
             List(chatBot.conversations, selection: currentConversationID) { conversation in
+                #if os(macOS)
+                if conversation.id == conversationIDToRename {
+                    TextField(conversation.title, text: $renamedTitle)
+                        .focused($isRenameTextFieldFocused)
+                        .onSubmit {
+                            chatBot.setTitle(renamedTitle, conversation: conversation)
+                            
+                            conversationIDToRename = nil
+                            isRenameTextFieldFocused = false
+                            renamedTitle = ""
+                        }
+                        .onChange(of: isRenameTextFieldFocused) { isFocused in
+                            if !isFocused {
+                                conversationIDToRename = nil
+                                renamedTitle = ""
+                            }
+                        }
+                } else {
+                    NavigationLink(conversation.title, value: conversation.id)
+                        .contextMenu {
+                            RenameButton()
+                            deleteButton(conversation)
+                        }
+                        .renameAction {
+                            conversationIDToRename = conversation.id
+                            isRenameTextFieldFocused = true
+                        }
+                }
+                #else
                 NavigationLink(conversation.title, value: conversation.id)
-                    #if os(macOS)
-                    .contextMenu { deleteButton(conversation) }
-                    #else
                     .swipeActions { deleteButton(conversation) }
-                    #endif
+                #endif
             }
         } else {
             List(chatBot.conversations) { conversation in
