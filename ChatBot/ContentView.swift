@@ -12,6 +12,8 @@ struct ContentView: View {
     @State private var text = ""
     
     var body: some View {
+        let canSendMessage = chatBot.dialogs.isEmpty || chatBot.generating || !text.isEmpty
+        
         ScrollViewReader { proxy in
             ScrollView {
                 Group {
@@ -38,22 +40,36 @@ struct ContentView: View {
             .textSelection(.enabled)
             .safeAreaInset(edge: .bottom) {
                 HStack {
-                    TextField("Type to ask ChatGPT", text: $text)
-                        .textFieldStyle(.plain)
-                        .bordedBackground()
-                        .onSubmit {
-                            chatBot.answer(text)
-                            text = ""
+                    if #available(macOS 13.0, iOS 16, *) {
+                        TextEditor(text: $text)
+                            .font(.body)
+                            .scrollContentBackground(.hidden)
+                            .padding()
+                            .foregroundColor(.primary)
+                            .frame(minHeight: 50, maxHeight: 150)
+                            .bordedBackground()
+                        Button {
+                            if canSendMessage {
+                                chatBot.answer(text)
+                                text = ""
+                            } else {
+                                chatBot.regenerate()
+                            }
+                        } label: {
+                            Image(systemName: canSendMessage ? "paperplane" : "arrow.counterclockwise")
                         }
-                    if !chatBot.dialogs.isEmpty && !chatBot.generating {
-                        Button(action: chatBot.regenerate) {
-                            Label("Regenerate response", systemImage: "arrow.counterclockwise")
-                        }
-                        .labelStyle(.iconOnly)
                         .buttonStyle(.plain)
+                        .labelStyle(.iconOnly)
                         .bordedBackground()
-                        .frame(width: 40)
-                        .transition(.move(edge: .trailing).combined(with: .opacity))
+                        .frame(width: 32)
+                    } else {
+                        TextField("Type to ask ChatGPT", text: $text)
+                            .textFieldStyle(.plain)
+                            .bordedBackground()
+                            .onSubmit {
+                                chatBot.answer(text)
+                                text = ""
+                            }
                     }
                 }
                 .animation(.spring(), value: chatBot.dialogs.isEmpty)
