@@ -20,6 +20,7 @@
 		384356E829B2F353005F2DBF /* OpenAIServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356E729B2F353005F2DBF /* OpenAIServer.swift */; };
 		384356EA29B2F70C005F2DBF /* APIKeyConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356E929B2F70C005F2DBF /* APIKeyConfigurator.swift */; };
 		384356EF29B3940F005F2DBF /* ConditionalModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384356EE29B3940F005F2DBF /* ConditionalModifier.swift */; };
+		FD79A32629BB48AF0045CDAC /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = FD79A32529BB48AF0045CDAC /* MarkdownUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD79A32629BB48AF0045CDAC /* MarkdownUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,6 +140,9 @@
 			dependencies = (
 			);
 			name = ChatBot;
+			packageProductDependencies = (
+				FD79A32529BB48AF0045CDAC /* MarkdownUI */,
+			);
 			productName = ChatBot;
 			productReference = 3841FB3529B0A7DE00AAC814 /* ChatBot.app */;
 			productType = "com.apple.product-type.application";
@@ -166,6 +171,9 @@
 				Base,
 			);
 			mainGroup = 3841FB2C29B0A7DE00AAC814;
+			packageReferences = (
+				FD79A32429BB48AF0045CDAC /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+			);
 			productRefGroup = 3841FB3629B0A7DE00AAC814 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -416,6 +424,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FD79A32429BB48AF0045CDAC /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
+			requirement = {
+				kind = exactVersion;
+				version = 2.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FD79A32529BB48AF0045CDAC /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FD79A32429BB48AF0045CDAC /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
+			productName = MarkdownUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3841FB2D29B0A7DE00AAC814 /* Project object */;
 }
