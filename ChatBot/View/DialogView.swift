@@ -22,10 +22,23 @@ struct DialogView: View {
                 .cornerRadius(8)
                 .padding(.horizontal)
             HStack(alignment: .top, spacing: 10) {
-                Image("chatgpt")
-                    .resizable().aspectRatio(contentMode: .fit)
-                    .frame(width: 30)
-                    .cornerRadius(8)
+                VStack(spacing: 20) {
+                    Image("chatgpt")
+                        .resizable().aspectRatio(contentMode: .fit)
+                        .frame(width: 30)
+                        .cornerRadius(8)
+                    Button {
+                        let pasteBoard = NSPasteboard.general
+                        pasteBoard.clearContents()
+                        pasteBoard.setString(dialog.botMessage, forType: .string)
+                    } label: {
+                        Label("Copy", systemImage: "doc.on.doc")
+                    }
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(.plain)
+                    .bordedBackground()
+                    .frame(width: 10, height: 10)
+                }
                 Group {
                     if let errorMsg = dialog.errorMsg {
                         Text("Error: \(errorMsg)").foregroundColor(.red)
@@ -57,6 +70,7 @@ struct DialogView: View {
 struct DialogView_Previews: PreviewProvider {
     static var previews: some View {
         DialogView(dialog: Dialog.testDialog)
+
     }
 }
 
