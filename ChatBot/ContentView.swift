@@ -39,14 +39,13 @@ struct ContentView: View {
             }
             .textSelection(.enabled)
             .safeAreaInset(edge: .bottom) {
-                HStack {
+                HStack(alignment: .bottom) {
                     if #available(macOS 13.0, iOS 16, *) {
                         TextEditor(text: $text)
                             .font(.body)
                             .scrollContentBackground(.hidden)
-                            .padding()
                             .foregroundColor(.primary)
-                            .frame(minHeight: 50, maxHeight: 150)
+                            .frame(maxHeight: 150)
                             .bordedBackground()
                         Button {
                             if canSendMessage {
