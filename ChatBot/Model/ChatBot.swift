@@ -91,7 +91,7 @@ class ChatBot: ObservableObject {
         answer(dialogs[dialogs.count - 1].userMessage, retry: true)
     }
     
-    @MainActor private func setTitle(_ title: String, conversation: Conversation?) {
+    @MainActor func setTitle(_ title: String, conversation: Conversation?) {
         guard let conversation else { return }
         guard conversation.id == self.conversation?.id else {
             if let index = conversations.firstIndex(where: { $0.id == conversation.id }) {
