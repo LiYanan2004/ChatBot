@@ -38,7 +38,7 @@ actor OpenAIServer {
             "Content-Type": "application/json"
         ]
         let encoder = JSONEncoder()
-        let messages = [DialogMessage(role: "system", content: "Use user's language to describe the topic of the user's input in short."), DialogMessage(content: "\(message)")]
+        let messages = [DialogMessage(role: "system", content: "Use user's language to describe the topic of the user's input within 5 words."), DialogMessage(content: "\(message)")]
         request.httpBody = try encoder.encode(MessageBody(messages: messages))
         let (data, _) = try await URLSession.shared.data(for: request)
         let response = String(data: data, encoding: .utf8)!
