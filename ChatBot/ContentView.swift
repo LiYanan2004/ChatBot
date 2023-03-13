@@ -61,6 +61,7 @@ struct ContentView: View {
                         .labelStyle(.iconOnly)
                         .bordedBackground()
                         .frame(width: 32)
+                        .keyboardShortcut(.return, modifiers: .command)
                     } else {
                         TextField("Type to ask ChatGPT", text: $text)
                             .textFieldStyle(.plain)
