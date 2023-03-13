@@ -4,6 +4,8 @@ ChatBot is a dedicated chat app powered by OpenAI’s GPT-3.5. It has all capabi
 
 ![](/imgs/screenshot.png)
 
+**Thanks all contributions from Daniel Fürst.**
+
 ## Quick start
 
 The only thing you need to prepare is your API_KEY. 
