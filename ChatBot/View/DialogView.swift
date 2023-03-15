@@ -14,7 +14,7 @@ struct DialogView: View {
     
     var body: some View {
         VStack(spacing: 10) {
-            Markdown(dialog.userMessage)
+            Text(verbatim: dialog.userMessage)
                 .unlimitedText()
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .trailing)
@@ -27,17 +27,6 @@ struct DialogView: View {
                         .resizable().aspectRatio(contentMode: .fit)
                         .frame(width: 30)
                         .cornerRadius(8)
-                    Button {
-                        let pasteBoard = NSPasteboard.general
-                        pasteBoard.clearContents()
-                        pasteBoard.setString(dialog.botMessage, forType: .string)
-                    } label: {
-                        Label("Copy", systemImage: "doc.on.doc")
-                    }
-                    .labelStyle(.iconOnly)
-                    .buttonStyle(.plain)
-                    .bordedBackground()
-                    .frame(width: 10, height: 10)
                 }
                 Group {
                     if let errorMsg = dialog.errorMsg {
@@ -52,7 +41,7 @@ struct DialogView: View {
                                 }
                             }
                     } else {
-                        Markdown(dialog.botMessage)
+                        Text(verbatim: dialog.botMessage)
                             .unlimitedText()
                     }
                 }
@@ -69,8 +58,9 @@ struct DialogView: View {
 
 struct DialogView_Previews: PreviewProvider {
     static var previews: some View {
-        DialogView(dialog: Dialog.testDialog)
-
+        ScrollView {
+            DialogView(dialog: Dialog.testDialog)
+        }
     }
 }
 
@@ -83,5 +73,5 @@ extension View {
 }
 
 extension Dialog {
-    static var testDialog = Dialog(userMessage: "Hello, ChatGPT", botMessage: "Hello user! I am ChatGPT, a chat bot.")
+    static var testDialog = Dialog(userMessage: "Hello, ChatGPT", botMessage: "Hello user! I am ChatGPT, a chat bot. Today, I would like to introducing GPT-4, the next generation of GPT platform.")
 }
