@@ -42,7 +42,6 @@ struct ContentView: View {
                 HStack(alignment: .bottom) {
                     if #available(macOS 13.0, iOS 16, *) {
                         TextEditor(text: $text)
-                            .font(.body)
                             .scrollContentBackground(.hidden)
                             .foregroundColor(.primary)
                             .frame(maxHeight: 150)

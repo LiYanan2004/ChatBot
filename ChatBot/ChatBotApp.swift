@@ -40,6 +40,9 @@ struct ChatBotApp: App {
             .background()
             .environmentObject(chatBot)
         }
+        .commands {
+            TextEditingCommands()
+        }
     }
 }
 
