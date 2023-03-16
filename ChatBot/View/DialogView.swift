@@ -5,7 +5,6 @@
 //  Created by LiYanan2004 on 2023/3/2.
 //
 
-import MarkdownUI
 import SwiftUI
 
 struct DialogView: View {
@@ -52,6 +51,11 @@ struct DialogView: View {
             .background(.green.opacity(0.3))
             .cornerRadius(8)
             .padding(.horizontal)
+            .onTapGesture {
+                let clipboard = NSPasteboard.general
+                clipboard.clearContents()
+                clipboard.setString(dialog.botMessage, forType: .string)
+            }
         }
     }
 }
